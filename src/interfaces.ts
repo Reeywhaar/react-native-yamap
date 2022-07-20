@@ -1,13 +1,42 @@
 export interface Point {
-  lat: number,
-  lon: number,
+  lat: number;
+  lon: number;
 }
 
-export type MasstransitVehicles = 'bus' | 'trolleybus' | 'tramway' | 'minibus' | 'suburban' | 'underground' | 'ferry' | 'cable' | 'funicular';
+export type AddressComponent =
+  | "unknown"
+  | "country"
+  | "region"
+  | "province"
+  | "area"
+  | "locality"
+  | "district"
+  | "street"
+  | "house"
+  | "entrance"
+  | "route"
+  | "station"
+  | "metro"
+  | "railway"
+  | "vegetation"
+  | "hydro"
+  | "airport"
+  | "other";
 
-export type Vehicles = MasstransitVehicles | 'walk' | 'car';
+export type MasstransitVehicles =
+  | "bus"
+  | "trolleybus"
+  | "tramway"
+  | "minibus"
+  | "suburban"
+  | "underground"
+  | "ferry"
+  | "cable"
+  | "funicular";
 
-export type MapType = 'none' | 'raster' | 'vector';
+export type Vehicles = MasstransitVehicles | "walk" | "car";
+
+export type MapType = "none" | "raster" | "vector";
 
 export interface DrivingInfo {
   time: string;
@@ -21,7 +50,7 @@ export interface MasstransitInfo {
   walkingDistance: number;
 }
 
-export interface RouteInfo<T extends (DrivingInfo | MasstransitInfo)> {
+export interface RouteInfo<T extends DrivingInfo | MasstransitInfo> {
   id: string;
   sections: {
     points: Point[];
@@ -35,9 +64,9 @@ export interface RouteInfo<T extends (DrivingInfo | MasstransitInfo)> {
   }[];
 }
 
-export interface RoutesFoundEvent<T extends (DrivingInfo | MasstransitInfo)> {
+export interface RoutesFoundEvent<T extends DrivingInfo | MasstransitInfo> {
   nativeEvent: {
-    status: 'success' | 'error';
+    status: "success" | "error";
     id: string;
     routes: RouteInfo<T>[];
   };
@@ -61,4 +90,4 @@ export type VisibleRegion = {
   bottomRight: Point;
   topLeft: Point;
   topRight: Point;
-}
+};
