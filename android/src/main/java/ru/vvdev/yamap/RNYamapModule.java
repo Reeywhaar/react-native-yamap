@@ -80,7 +80,7 @@ public class RNYamapModule extends ReactContextBaseJavaModule {
         runOnUiThread(new Thread(new Runnable() {
             @Override
             public void run() {
-                I18nManagerFactory.setLocale(locale);
+                MapKitFactory.setLocale(locale);
                 successCb.invoke();
             }
         }));

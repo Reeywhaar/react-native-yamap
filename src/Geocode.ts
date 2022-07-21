@@ -10,7 +10,7 @@ export type YamapGeocodeResult = {
   coords: Point;
   upperCorner: Point;
   lowerCorner: Point;
-  components: AddressComponent[];
+  components: { name: string; kinds: AddressComponent[] };
 };
 
 type GeocodeFetcher = (
