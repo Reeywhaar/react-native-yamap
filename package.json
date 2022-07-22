@@ -1,12 +1,11 @@
 {
-  "name": "react-native-yamap",
+  "name": "@reeywhaar/react-native-yamap",
   "version": "4.0.19",
   "description": "Yandex.MapKit and Yandex.Geocoder for react-native",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "rm -rf build && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "homepage": "https://github.com/volga-volga/react-native-yamap",
