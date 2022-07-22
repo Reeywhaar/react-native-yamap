@@ -18,6 +18,9 @@ type GeocodeFetcher = (
 ) => Promise<YamapGeocodeResult | undefined>;
 const geocode: GeocodeFetcher = (query) => YamapGeocode.geocode(query);
 
+/**
+ * This version of Geocode doesn't use http-geocoding and doesn't require separate api key
+ */
 const Geocode = {
   geocode,
 };
