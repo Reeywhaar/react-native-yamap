@@ -10,6 +10,8 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
+import com.yandex.mapkit.geometry.Point;
 
 import ru.vvdev.yamap.utils.Callback;
 
@@ -41,6 +43,33 @@ public class RNYandexGeocodeModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 getGeocodeClient(getReactApplicationContext()).geocode(text,
+                        new Callback<MapGeocodeItem>() {
+                            @Override
+                            public void invoke(MapGeocodeItem result) {
+                                promise.resolve(argsHelper.createResultItemFrom(result));
+                            }
+                        },
+                        new Callback<Throwable>() {
+                            @Override
+                            public void invoke(Throwable e) {
+                                promise.reject(ERR_GEOCODE_FAILED, "suggest request: " + e.getMessage());
+                            }
+                        });
+            }
+        });
+    }
+
+    @ReactMethod
+    public void geocodePoint(ReadableArray point, final Promise promise) {
+        if (point == null) {
+            promise.reject(ERR_NO_REQUEST_ARG, "suggest request: text arg is not provided");
+            return;
+        }
+        Point ypoint = new Point(point.getDouble(0), point.getDouble(1));
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                getGeocodeClient(getReactApplicationContext()).geocodePoint(ypoint,
                         new Callback<MapGeocodeItem>() {
                             @Override
                             public void invoke(MapGeocodeItem result) {

@@ -9,6 +9,7 @@ import com.yandex.mapkit.GeoObject;
 import com.yandex.mapkit.GeoObjectCollection;
 import com.yandex.mapkit.geometry.BoundingBox;
 import com.yandex.mapkit.geometry.Geometry;
+import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.search.Address;
 import com.yandex.mapkit.search.Response;
 import com.yandex.mapkit.search.SearchFactory;
@@ -23,7 +24,6 @@ import com.yandex.runtime.Error;
 import java.util.List;
 
 import ru.vvdev.yamap.utils.Callback;
-import ru.vvdev.yamap.utils.Point;
 
 public class YandexMapGeocodeClient implements MapGeocodeClient {
 
@@ -55,6 +55,26 @@ public class YandexMapGeocodeClient implements MapGeocodeClient {
       searchManager.submit(
         text,
         Geometry.fromBoundingBox(defaultGeometry),
+        searchOptions,
+        new Session.SearchListener() {
+          @Override
+          public void onSearchResponse(@NonNull Response response) {
+            onSuccess.invoke(YandexMapGeocodeClient.extract(response));
+          }
+
+          @Override
+          public void onSearchError(@NonNull Error error) {
+            onError.invoke(new IllegalStateException("suggest error: " + error));
+          }
+        }
+      );
+    }
+
+    @Override
+    public void geocodePoint(final Point point, final Callback<MapGeocodeItem> onSuccess, final Callback<Throwable> onError) {
+      searchManager.submit(
+        point,
+        0,
         searchOptions,
         new Session.SearchListener() {
           @Override
@@ -115,9 +135,9 @@ public class YandexMapGeocodeClient implements MapGeocodeClient {
       result.name = geoObject.getName();
       result.descriptionText = geoObject.getDescriptionText();
       result.formattedAddress = address.getFormattedAddress();
-      result.coords = new Point(point.getLatitude(), point.getLongitude());
-      result.upperCorner = new Point(box.getNorthEast().getLatitude(), box.getNorthEast().getLongitude());
-      result.lowerCorner = new Point(box.getSouthWest().getLatitude(), box.getSouthWest().getLongitude());
+      result.coords = point;
+      result.upperCorner = box.getNorthEast();
+      result.lowerCorner = box.getSouthWest();
       result.components = address.getComponents();
       return result;
     }

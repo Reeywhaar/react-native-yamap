@@ -75,6 +75,39 @@ RCT_EXPORT_METHOD(geocode:(nonnull NSString*) searchQuery
     });
 })
 
+RCT_EXPORT_METHOD(geocodePoint:(NSArray*) point
+                resolver:(RCTPromiseResolveBlock) resolve
+                rejecter:(RCTPromiseRejectBlock) reject {
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @try {
+            NSNumber* lat = point[0];
+            NSNumber* lon = point[1];
+            YMKPoint* ymkpoint = [YMKPoint pointWithLatitude:lat.doubleValue longitude:lon.doubleValue];
+            NSString *key = [[NSUUID UUID] UUIDString];
+            YMKSearchSession* session = [self->searchManager submitWithPoint:ymkpoint
+                                     zoom:nil
+                            searchOptions:self->searchOptions
+                          responseHandler:^(YMKSearchResponse * _Nullable response, NSError * _Nullable error){
+
+                if (error) {
+                    reject(ERR_GEOCODE_SEARCH_FAILED, [NSString stringWithFormat:@"search request: %@", point], error);
+                } else {
+                    resolve([self convert: response]);
+                }
+
+                [self->searchSessions removeObjectForKey:key];
+            }];
+            
+            // put into dictionary to create strong reference
+            [self->searchSessions setObject:session forKey:key];
+        }
+        @catch ( NSException *error ) {
+            reject(ERR_GEOCODE_NO_REQUEST_ARG, [NSString stringWithFormat:@"search request: %@", point], nil);
+        }
+    });
+})
+
 RCT_EXPORT_MODULE();
 
 -(NSDictionary *) convert:(YMKSearchResponse*) response {

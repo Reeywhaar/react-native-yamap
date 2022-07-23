@@ -1,10 +1,9 @@
 package ru.vvdev.yamap.yageocode;
 
+import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.search.Address;
 
 import java.util.List;
-
-import ru.vvdev.yamap.utils.Point;
 
 public class MapGeocodeItem {
 

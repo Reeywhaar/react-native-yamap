@@ -3,6 +3,7 @@ package ru.vvdev.yamap.yageocode;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.search.Address;
 
 public final class YandexGeocodeRNArgsHelper {
@@ -12,9 +13,9 @@ public final class YandexGeocodeRNArgsHelper {
         result.putString("name", data.name);
         result.putString("descriptionText", data.descriptionText);
         result.putString("formattedAddress", data.formattedAddress);
-        result.putMap("coords", data.coords.toMap());
-        result.putMap("upperCorner", data.upperCorner.toMap());
-        result.putMap("lowerCorner", data.lowerCorner.toMap());
+        result.putMap("coords", this.pointToMap(data.coords));
+        result.putMap("upperCorner", this.pointToMap(data.upperCorner));
+        result.putMap("lowerCorner", this.pointToMap(data.lowerCorner));
 
         for(Address.Component component: data.components) {
           WritableMap item = Arguments.createMap();
@@ -70,5 +71,12 @@ public final class YandexGeocodeRNArgsHelper {
         default:
           return "unknown";
       }
+    }
+
+    private WritableMap pointToMap(Point point) {
+      WritableMap map = Arguments.createMap();
+      map.putDouble("lat", point.getLatitude());
+      map.putDouble("lon", point.getLongitude());
+      return map;
     }
 }

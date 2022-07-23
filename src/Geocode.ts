@@ -14,9 +14,12 @@ export type YamapGeocodeResult = {
 };
 
 type GeocodeFetcher = (
-  query: string
+  query: string | [latitude: number, longitude: number]
 ) => Promise<YamapGeocodeResult | undefined>;
-const geocode: GeocodeFetcher = (query) => YamapGeocode.geocode(query);
+const geocode: GeocodeFetcher = (query) =>
+  typeof query === "string"
+    ? YamapGeocode.geocode(query)
+    : YamapGeocode.geocodePoint(query);
 
 /**
  * This version of Geocode doesn't use http-geocoding and doesn't require separate api key
