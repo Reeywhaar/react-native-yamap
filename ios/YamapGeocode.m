@@ -28,9 +28,9 @@
                                                           appleCtx:nil
                                                           geometry:TRUE
                                                       advertPageId:nil
-                                                      suggestWords:nil
-                                         disableSpellingCorrection:FALSE];
-
+                                         disableSpellingCorrection:FALSE
+                                                           filters:nil];
+    
     searchManager = [[YMKSearch sharedInstance] createSearchManagerWithSearchManagerType:YMKSearchSearchManagerTypeOnline];
     searchSessions = [NSMutableDictionary dictionary];
 
